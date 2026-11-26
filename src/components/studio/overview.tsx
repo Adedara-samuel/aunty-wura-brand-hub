@@ -25,15 +25,31 @@ function Stat({ icon: Icon, label, value, tone }: { icon: typeof CheckCircle2; l
   );
 }
 
+const HOWTO_KEY = "studio.howto.hidden";
+const howtoListeners = new Set<() => void>();
+function readHowtoHidden() {
+  try {
+    return localStorage.getItem(HOWTO_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 function HowItWorks() {
-  const [hidden, setHidden] = React.useState(true);
-  React.useEffect(() => {
+  const hidden = React.useSyncExternalStore(
+    (cb) => {
+      howtoListeners.add(cb);
+      return () => howtoListeners.delete(cb);
+    },
+    readHowtoHidden,
+    () => true,
+  );
+  const setHidden = () => {
     try {
-      setHidden(localStorage.getItem("studio.howto.hidden") === "1");
-    } catch {
-      setHidden(false);
-    }
-  }, []);
+      localStorage.setItem(HOWTO_KEY, "1");
+    } catch {}
+    howtoListeners.forEach((l) => l());
+  };
   if (hidden) return null;
   const steps = [
     { t: "Fill in each section", d: "Work through the 10 sections in any order. Every field explains what's needed and shows an example." },
@@ -45,12 +61,7 @@ function HowItWorks() {
     <Card className="relative p-5 md:p-6">
       <button
         className="absolute top-3 right-3 cursor-pointer rounded-full p-1.5 text-muted-foreground hover:bg-muted"
-        onClick={() => {
-          setHidden(true);
-          try {
-            localStorage.setItem("studio.howto.hidden", "1");
-          } catch {}
-        }}
+        onClick={setHidden}
         aria-label="Hide"
       >
         <X className="size-4" />

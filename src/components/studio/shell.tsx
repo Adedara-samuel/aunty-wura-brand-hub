@@ -13,11 +13,16 @@ import { cn, initials } from "@/lib/utils";
 import { ModuleIcon } from "./icons";
 import { StateDot } from "./status";
 
+const NavigateContext = React.createContext<() => void>(() => {});
+
 function NavLink({ href, active, children, className }: { href: string; active: boolean; children: React.ReactNode; className?: string }) {
+  const onNavigate = React.useContext(NavigateContext);
   return (
     <NextLink
       href={href}
-      onClick={confirmLeave}
+      onClick={(e) => {
+        if (confirmLeave(e)) onNavigate();
+      }}
       aria-current={active ? "page" : undefined}
       className={cn(
         "group flex items-center gap-3 rounded-xl px-3 py-2 text-[0.88rem] font-medium transition",
@@ -136,8 +141,6 @@ function SidebarContent({ user }: { user: { name: string; email: string } }) {
 
 export function StudioShell({ user, children }: { user: { name: string; email: string }; children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
-  const pathname = usePathname();
-  React.useEffect(() => setOpen(false), [pathname]);
 
   return (
     <div className="min-h-dvh bg-background lg:grid lg:grid-cols-[17.5rem_1fr]">
@@ -155,7 +158,9 @@ export function StudioShell({ user, children }: { user: { name: string; email: s
             </DialogTrigger>
             <SheetContent side="left">
               <DialogPrimitive.Title className="sr-only">Studio navigation</DialogPrimitive.Title>
-              <SidebarContent user={user} />
+              <NavigateContext.Provider value={() => setOpen(false)}>
+                <SidebarContent user={user} />
+              </NavigateContext.Provider>
             </SheetContent>
           </Dialog>
         </header>
