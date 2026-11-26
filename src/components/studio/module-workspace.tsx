@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
+  FolderOpen,
   Lightbulb,
   List,
   MoreHorizontal,
@@ -272,8 +273,19 @@ export function ModuleWorkspace({ moduleId, initialTab }: { moduleId: ModuleId; 
     <div>
       {header}
       <div className="mx-auto max-w-[110rem] space-y-6 px-4 py-6 md:px-8 md:py-8">
-        <div className="max-w-6xl">
+        <div className="max-w-6xl space-y-4">
           <ModuleGuidance moduleId={moduleId} />
+          {moduleId === "gallery" && (
+            <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-semibold">Your media library</p>
+                <p className="text-sm text-muted-foreground">Upload loose photos, videos and documents (rate cards, media kits, logos) and download everything as a ZIP.</p>
+              </div>
+              <NextLink href="/content-studio/media" onClick={confirmLeave} className={buttonVariants({ variant: "outline" })}>
+                <FolderOpen /> Open media library
+              </NextLink>
+            </Card>
+          )}
         </div>
         {isLoading ? (
           <div className="space-y-4">

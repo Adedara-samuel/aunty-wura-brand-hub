@@ -42,6 +42,8 @@ function SidebarContent({ user }: { user: { name: string; email: string } }) {
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
+    // Full reload on purpose: drops every cached Studio query from memory.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/content-studio/login";
   };
 

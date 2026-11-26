@@ -27,6 +27,8 @@ export async function api<T>(url: string, init?: RequestInit): Promise<T> {
   }
   const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (res.status === 401 && typeof window !== "undefined") {
+    // Session expired — hard redirect so no stale private data stays in memory.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = `/content-studio/login?next=${encodeURIComponent(window.location.pathname)}`;
   }
   if (!res.ok) throw new ApiError(String(body.error ?? "Something went wrong"), res.status, body);
