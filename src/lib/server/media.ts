@@ -69,7 +69,7 @@ export function storageProvider(): "local" | "cloudinary" {
 }
 
 function uploadDir() {
-  return path.resolve(process.cwd(), process.env.UPLOAD_DIR || ".data/uploads");
+  return path.resolve(/*turbopackIgnore: true*/ process.cwd(), process.env.UPLOAD_DIR || ".data/uploads");
 }
 
 async function mediaCol() {
@@ -144,7 +144,7 @@ export async function saveLocalUpload(
   const kind = validateUpload(mime, file.size);
   const now = new Date();
   const key = `${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, "0")}/${randomBytes(16).toString("hex")}.${extensionFor(mime)}`;
-  const abs = path.join(uploadDir(), key);
+  const abs = path.join(/*turbopackIgnore: true*/ uploadDir(), key);
   await fs.mkdir(path.dirname(abs), { recursive: true });
   await fs.writeFile(abs, Buffer.from(await file.arrayBuffer()));
 
@@ -171,7 +171,7 @@ export async function readLocalMedia(key: string): Promise<{ doc: MediaDoc; data
   if (!/^[\w/.-]+$/.test(key) || key.includes("..")) throw new HttpError(404, "Not found");
   const doc = await (await mediaCol()).findOne({ key, provider: "local" });
   if (!doc) throw new HttpError(404, "Not found");
-  const abs = path.join(uploadDir(), key);
+  const abs = path.join(/*turbopackIgnore: true*/ uploadDir(), key);
   if (!abs.startsWith(uploadDir())) throw new HttpError(404, "Not found");
   try {
     return { doc, data: await fs.readFile(abs) };
@@ -310,7 +310,7 @@ export async function mediaUsage(id: string) {
 export async function deleteMedia(id: string) {
   const doc = await getMediaDoc(id);
   if (doc.provider === "local") {
-    await fs.rm(path.join(uploadDir(), doc.key), { force: true });
+    await fs.rm(path.join(/*turbopackIgnore: true*/ uploadDir(), doc.key), { force: true });
   } else {
     await destroyCloudinary(doc);
   }
@@ -349,7 +349,7 @@ export async function syncMediaVisibility() {
 /** Read raw bytes for any media item (used for ZIP export). */
 export async function readMediaBytes(doc: MediaDoc): Promise<Buffer | null> {
   try {
-    if (doc.provider === "local") return await fs.readFile(path.join(uploadDir(), doc.key));
+    if (doc.provider === "local") return await fs.readFile(path.join(/*turbopackIgnore: true*/ uploadDir(), doc.key));
     const res = await fetch(doc.url);
     if (!res.ok) return null;
     return Buffer.from(await res.arrayBuffer());
