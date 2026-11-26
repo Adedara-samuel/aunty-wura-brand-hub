@@ -10,7 +10,7 @@ import { useSite } from "../site-context";
 import { CategoryFilter, MediaGallery, Prose, Reveal, uniqueCategories } from "./common";
 import type { MediaRef } from "@/lib/content/types";
 
-function GallerySection() {
+export function GallerySection() {
   const { site } = useSite();
   const [cat, setCat] = React.useState("");
   const items = site.gallery;
