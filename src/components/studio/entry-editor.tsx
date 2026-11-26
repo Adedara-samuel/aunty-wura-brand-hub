@@ -61,6 +61,7 @@ export function EntryEditor({
   onCreated,
   onDeleted,
   autosave = true,
+  publishable = CONTENT_TYPES[type].excludeFromProgress !== true,
 }: {
   type: ContentTypeId;
   entry: Entry | null;
@@ -68,6 +69,8 @@ export function EntryEditor({
   onCreated?: (entry: Entry) => void;
   onDeleted?: () => void;
   autosave?: boolean;
+  /** Settings-style content applies on save and has no publish step. */
+  publishable?: boolean;
 }) {
   const def = CONTENT_TYPES[type];
   const isWide = useIsWide();
@@ -266,7 +269,7 @@ export function EntryEditor({
           <div className="sticky top-14 z-20 -mx-4 mb-6 border-y bg-surface/95 px-4 py-2.5 backdrop-blur md:-mx-8 md:px-8 lg:top-0">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <PublishBadge published={published} changed={!!changed} />
+                {publishable && <PublishBadge published={published} changed={!!changed} />}
                 <span className={cn("flex items-center gap-1.5 text-xs", saveState === "error" ? "text-destructive" : "text-muted-foreground")}>
                   {saveState === "saving" ? <Loader2 className="size-3.5 animate-spin" /> : saveState === "saved" || (saveState === "idle" && entryId) ? <CheckCircle2 className="size-3.5 text-success" /> : saveState === "error" ? <AlertCircle className="size-3.5" /> : null}
                   {statusText}
@@ -296,12 +299,14 @@ export function EntryEditor({
                   {effectiveMode === "preview" ? <PanelLeft /> : <Eye />} {effectiveMode === "preview" ? "Edit" : "Preview"}
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => void doSave()} disabled={busy || (!isDirty && !!entryId)}>
-                  {save.isPending ? <Loader2 className="animate-spin" /> : <Save />} Save draft
+                  {save.isPending ? <Loader2 className="animate-spin" /> : <Save />} {publishable ? "Save draft" : "Save"}
                 </Button>
-                <Button size="sm" onClick={() => void publish()} disabled={busy || (published && !changed)}>
-                  {action.isPending ? <Loader2 className="animate-spin" /> : <Rocket />} {published ? (changed ? "Update live site" : "Published") : "Publish"}
-                </Button>
-                {entryId && (
+                {publishable && (
+                  <Button size="sm" onClick={() => void publish()} disabled={busy || (published && !changed)}>
+                    {action.isPending ? <Loader2 className="animate-spin" /> : <Rocket />} {published ? (changed ? "Update live site" : "Published") : "Publish"}
+                  </Button>
+                )}
+                {entryId && publishable && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon-sm" aria-label="More actions"><MoreHorizontal /></Button>
@@ -327,7 +332,7 @@ export function EntryEditor({
             {effectiveMode !== "preview" && (
               <form onSubmit={(e) => { e.preventDefault(); void doSave(); }} noValidate className="min-w-0 space-y-6">
                 {/* Checklist */}
-                <Card className={cn("p-4 md:p-5", missing.length ? "border-warning/30 bg-warning/[0.04]" : "border-success/30 bg-success/[0.05]")}>
+                <Card className={cn("p-4 md:p-5", !publishable && "hidden", missing.length ? "border-warning/30 bg-warning/[0.04]" : "border-success/30 bg-success/[0.05]")}>
                   {missing.length ? (
                     <>
                       <p className="flex items-center gap-2 text-sm font-semibold">
@@ -363,11 +368,13 @@ export function EntryEditor({
 
                 <div className="flex flex-wrap justify-end gap-2 pb-6">
                   <Button type="submit" variant="outline" disabled={busy || (!isDirty && !!entryId)}>
-                    <Save /> Save draft
+                    <Save /> {publishable ? "Save draft" : "Save"}
                   </Button>
-                  <Button type="button" onClick={() => void publish()} disabled={busy || (published && !changed)}>
-                    <Rocket /> {published ? (changed ? "Update live site" : "Published") : "Publish"}
-                  </Button>
+                  {publishable && (
+                    <Button type="button" onClick={() => void publish()} disabled={busy || (published && !changed)}>
+                      <Rocket /> {published ? (changed ? "Update live site" : "Published") : "Publish"}
+                    </Button>
+                  )}
                 </div>
               </form>
             )}
