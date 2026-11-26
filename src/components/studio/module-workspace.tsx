@@ -199,7 +199,7 @@ function CollectionList({ moduleId, type, entries }: { moduleId: ModuleId; type:
         description="It will be removed from the Studio and from the website. Uploaded files stay in your media library."
         confirmLabel="Delete"
         destructive
-        onConfirm={() => toDelete && run(toDelete, "delete")}
+        onConfirm={() => (toDelete ? run(toDelete, "delete") : undefined)}
       />
     </div>
   );

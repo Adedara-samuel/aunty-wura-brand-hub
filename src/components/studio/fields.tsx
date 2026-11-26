@@ -217,7 +217,7 @@ const PRICE_MODES: { value: PriceMode; label: string }[] = [
 ];
 
 function PriceInput({ id, value, onChange }: { id: string; value: Price; onChange: (v: Price) => void }) {
-  const p: Price = { mode: "fixed", amount: null, currency: "NGN", note: "", ...value };
+  const p: Price = { amount: null, note: "", ...value, mode: value?.mode ?? "fixed", currency: value?.currency ?? "NGN" };
   return (
     <div className="space-y-3 rounded-xl border bg-surface/60 p-3">
       <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="radiogroup" aria-label="Pricing type">

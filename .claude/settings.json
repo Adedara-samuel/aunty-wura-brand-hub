@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(cd \"c:/Users/HomePC/Documents/work/aunty-wura-brand-hub/src/app/content-studio\" && mkdir -p \"\\(workspace\\)/[module]/[entryId]\" \"\\(workspace\\)/media\" \"\\(workspace\\)/enquiries\" \"\\(workspace\\)/review\" \"\\(workspace\\)/settings\" frame && echo ok)",
-      "PowerShell(Set-Location c:\\\\Users\\\\HomePC\\\\Documents\\\\work\\\\aunty-wura-brand-hub; npx tsc --noEmit -p . 2>&1 | Select-Object -First 50; \"exit: $LASTEXITCODE\")"
+      "PowerShell(Set-Location c:\\\\Users\\\\HomePC\\\\Documents\\\\work\\\\aunty-wura-brand-hub; npx tsc --noEmit -p . 2>&1 | Select-Object -First 50; \"exit: $LASTEXITCODE\")",
+      "PowerShell(npx tsc --noEmit -p . 2>&1 | Select-Object -First 50; \"exit: $LASTEXITCODE\"; npx eslint src 2>&1 | Select-Object -Last 40)"
     ],
     "additionalDirectories": [
       "c:\\Users\\HomePC\\Documents\\work\\aunty-wura-brand-hub\\(workspace)\\[module]"

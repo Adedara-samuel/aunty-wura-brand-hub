@@ -160,7 +160,7 @@ export function EnquiriesInbox() {
         description="This permanently removes the message."
         confirmLabel="Delete"
         destructive
-        onConfirm={() => toDelete && remove(toDelete)}
+        onConfirm={() => (toDelete ? remove(toDelete) : undefined)}
       />
     </div>
   );
