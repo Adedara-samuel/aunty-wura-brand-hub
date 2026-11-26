@@ -140,6 +140,13 @@ export async function saveLocalUpload(
   file: File,
   meta: { folder?: string; width?: number; height?: number },
 ): Promise<MediaItem> {
+  if (process.env.VERCEL) {
+    // Serverless hosts have a read-only, non-persistent filesystem.
+    throw new HttpError(
+      503,
+      "Uploads need Cloudinary on this hosting. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET in the Vercel project settings, then redeploy.",
+    );
+  }
   const mime = file.type || "application/octet-stream";
   const kind = validateUpload(mime, file.size);
   const now = new Date();
