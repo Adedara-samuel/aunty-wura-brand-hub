@@ -234,9 +234,9 @@ export function FragranceDetail({ item }: { item: SiteItem }) {
                 ))}
               </div>
             )}
-            <a href="/fragrance#ordering" className="mt-10 inline-flex items-center gap-1 text-sm text-gold hover:underline">
+            <Link href="/fragrance#ordering" className="mt-10 inline-flex items-center gap-1 text-sm text-gold hover:underline">
               Ordering & delivery information <ArrowUpRight className="size-4" />
-            </a>
+            </Link>
           </div>
         </div>
       </article>

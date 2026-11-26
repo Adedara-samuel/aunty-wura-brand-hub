@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { Dialog, DialogTrigger, SheetContent } from "@/components/ui/overlay";
 import { Dialog as DialogPrimitive } from "radix-ui";
@@ -38,12 +39,9 @@ export function SiteHeader() {
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  React.useEffect(() => setOpen(false), [pathname]);
 
   const active = (href: string) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
 
@@ -114,6 +112,7 @@ export function SiteHeader() {
                   <Link
                     key={n.href}
                     href={n.href}
+                    onClick={() => setOpen(false)}
                     className={cn(
                       "flex items-baseline gap-3 rounded-xl px-3 py-2.5 font-display text-2xl transition hover:bg-muted",
                       active(n.href) && "text-primary",
@@ -128,7 +127,7 @@ export function SiteHeader() {
                 ))}
               </nav>
               <div className="border-t p-6">
-                <Link href="/contact" className={cn(buttonVariants({ variant: "ink" }), "w-full")}>
+                <Link href="/contact" onClick={() => setOpen(false)} className={cn(buttonVariants({ variant: "ink" }), "w-full")}>
                   Work with me
                 </Link>
               </div>
@@ -251,9 +250,9 @@ export function PreviewBar() {
             <span className="hidden text-background/65 sm:inline">— you are seeing unpublished changes. Visitors only see published content.</span>
           </p>
           <div className="flex gap-3">
-            <a href="/content-studio" className="underline-offset-2 hover:underline">
+            <NextLink href="/content-studio" className="underline-offset-2 hover:underline">
               Back to Studio
-            </a>
+            </NextLink>
             <a href="/api/preview/exit" className="inline-flex items-center gap-1 font-semibold underline-offset-2 hover:underline">
               Exit preview <ArrowUpRight className="size-3" />
             </a>

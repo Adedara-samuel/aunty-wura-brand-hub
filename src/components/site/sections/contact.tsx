@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Clock, Loader2, Mail, MapPin, MessageCircle, Phone, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function EnquiryForm({ initialKind = "business", initialService = "" }: {
     resolver: zodResolver(enquirySchema),
     defaultValues: { kind: initialKind, name: "", email: "", phone: "", organisation: "", subject: "", service: initialService, budget: "", timeline: "", message: "", website: "" },
   });
-  const kind = form.watch("kind");
+  const kind = useWatch({ control: form.control, name: "kind" });
   const { errors, isSubmitting } = form.formState;
   const services = site.services.map((s) => str(s.data.name)).filter(Boolean);
 

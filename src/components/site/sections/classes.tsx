@@ -9,7 +9,7 @@ import { classFormatLabel, formatPrice, platformLabel } from "@/lib/format";
 import { cn, str, strList } from "@/lib/utils";
 import { asMedia, EmptySection, ExtLink, GhostCards, Link, MediaFrame, Ph } from "../placeholder";
 import { useSite } from "../site-context";
-import { CheckList, PageIntro, Prose, Reveal } from "./common";
+import { PageIntro, Prose, Reveal } from "./common";
 
 export function PurchaseButton({ type, data, className, size = "lg" }: { type: "class" | "product"; data: Record<string, unknown>; className?: string; size?: "lg" | "default" }) {
   const action = getPurchaseAction(type, data);

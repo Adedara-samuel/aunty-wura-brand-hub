@@ -12,10 +12,6 @@ export function Reveal({ children, className, delay = 0, as: As = "div" }: { chi
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setShown(true);
-      return;
-    }
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {

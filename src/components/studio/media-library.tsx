@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Archive, Check, Cloud, Copy, Download, HardDrive, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -28,21 +28,21 @@ function folderLabel(f: string) {
 }
 
 function MediaDetail({ item, onClose }: { item: MediaItem | null; onClose: () => void }) {
+  if (!item) return null;
+  return <MediaDetailInner key={item.id} item={item} onClose={onClose} />;
+}
+
+function MediaDetailInner({ item, onClose }: { item: MediaItem; onClose: () => void }) {
   const qc = useQueryClient();
-  const [alt, setAlt] = React.useState("");
+  const [alt, setAlt] = React.useState(item.alt ?? "");
   const [busy, setBusy] = React.useState(false);
-  const [usage, setUsage] = React.useState<{ id: string; type: string }[] | null>(null);
   const [confirm, setConfirm] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
+  const { data: usage } = useQuery({
+    queryKey: ["media-usage", item.id],
+    queryFn: () => api<{ usage: { id: string; type: string }[] }>(`/api/studio/media/${item.id}`).then((r) => r.usage),
+  });
 
-  React.useEffect(() => {
-    if (!item) return;
-    setAlt(item.alt ?? "");
-    setUsage(null);
-    api<{ usage: { id: string; type: string }[] }>(`/api/studio/media/${item.id}`).then((r) => setUsage(r.usage)).catch(() => setUsage([]));
-  }, [item]);
-
-  if (!item) return null;
   const absolute = typeof window !== "undefined" && item.url.startsWith("/") ? `${window.location.origin}${item.url}` : item.url;
 
   const saveAlt = async () => {
@@ -179,6 +179,7 @@ export function MediaLibrary() {
         description="Every photo, video and document you've uploaded anywhere in the Studio. Download them individually or all at once."
         actions={
           <>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- file download from an API route */}
             <a href="/api/studio/media/zip" className={cn(buttonVariants({ variant: "outline" }), !data?.media.length && "pointer-events-none opacity-50")}>
               <Archive /> Download all (ZIP)
             </a>

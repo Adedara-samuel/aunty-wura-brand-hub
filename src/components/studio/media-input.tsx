@@ -178,15 +178,6 @@ export function LibraryDialog({
   multiple?: boolean;
   onSelect: (refs: MediaRef[]) => void;
 }) {
-  const { data, isLoading } = useMedia();
-  const [selected, setSelected] = React.useState<string[]>([]);
-  React.useEffect(() => {
-    if (open) setSelected([]);
-  }, [open]);
-  const items = (data?.media ?? []).filter((m) => accept.includes(m.kind));
-  const toggle = (id: string) =>
-    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : multiple ? [...s, id] : [id]));
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
@@ -194,6 +185,21 @@ export function LibraryDialog({
           <DialogTitle>Choose from your media library</DialogTitle>
           <DialogDescription>Files you have already uploaded anywhere in the Studio.</DialogDescription>
         </DialogHeader>
+        {open && <LibraryGrid accept={accept} multiple={multiple} onSelect={onSelect} onClose={() => onOpenChange(false)} />}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function LibraryGrid({ accept, multiple, onSelect, onClose }: { accept: MediaKind[]; multiple?: boolean; onSelect: (refs: MediaRef[]) => void; onClose: () => void }) {
+  const { data, isLoading } = useMedia();
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const items = (data?.media ?? []).filter((m) => accept.includes(m.kind));
+  const toggle = (id: string) =>
+    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : multiple ? [...s, id] : [id]));
+
+  return (
+    <>
         {isLoading ? (
           <div className="flex h-40 items-center justify-center"><Loader2 className="animate-spin text-muted-foreground" /></div>
         ) : items.length === 0 ? (
@@ -222,19 +228,18 @@ export function LibraryDialog({
           </div>
         )}
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button
             disabled={!selected.length}
             onClick={() => {
               onSelect(items.filter((m) => selected.includes(m.id)).map(toRef));
-              onOpenChange(false);
+              onClose();
             }}
           >
             Use {selected.length > 1 ? `${selected.length} files` : "file"}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+    </>
   );
 }
 
@@ -339,7 +344,9 @@ export function MultiMediaInput({
 }) {
   const [libOpen, setLibOpen] = React.useState(false);
   const latest = React.useRef(value);
-  latest.current = value;
+  React.useEffect(() => {
+    latest.current = value;
+  }, [value]);
   const { pending, upload } = useUploader(folder, accept, (refs) => onChange([...latest.current, ...refs]));
 
   const move = (i: number, d: number) => {

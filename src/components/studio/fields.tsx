@@ -1,4 +1,9 @@
 "use client";
+/*
+ * `react-hooks/refs` reports react-hook-form's `field` object (which carries a callback `ref`)
+ * as a ref read during render. Passing `field.ref` to an input is the documented RHF pattern.
+ */
+/* eslint-disable react-hooks/refs */
 
 import * as React from "react";
 import { useController, useFormContext, useWatch, type FieldValues } from "react-hook-form";
@@ -145,13 +150,16 @@ function TagsInput({ id, value, onChange, suggestions, placeholder }: { id: stri
 
 function ListInput({ id, value, onChange, itemLabel = "item", placeholder }: { id: string; value: string[]; onChange: (v: string[]) => void; itemLabel?: string; placeholder?: string }) {
   const refs = React.useRef<(HTMLInputElement | null)[]>([]);
-  const [focusIndex, setFocusIndex] = React.useState<number | null>(null);
+  const pendingFocus = React.useRef<number | null>(null);
+  const setFocusIndex = (i: number) => {
+    pendingFocus.current = i;
+  };
   React.useEffect(() => {
-    if (focusIndex !== null) {
-      refs.current[focusIndex]?.focus();
-      setFocusIndex(null);
+    if (pendingFocus.current !== null) {
+      refs.current[pendingFocus.current]?.focus();
+      pendingFocus.current = null;
     }
-  }, [focusIndex, value.length]);
+  }, [value.length]);
   const rows = value.length ? value : [""];
   const set = (i: number, v: string) => {
     const next = rows.slice();

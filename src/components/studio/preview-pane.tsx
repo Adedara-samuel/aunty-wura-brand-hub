@@ -45,13 +45,13 @@ export function PreviewPane({
     [site, option.view, itemId],
   );
   const latest = React.useRef(message);
-  latest.current = message;
 
   const post = React.useCallback(() => {
     frameRef.current?.contentWindow?.postMessage(latest.current, window.location.origin);
   }, []);
 
   React.useEffect(() => {
+    latest.current = message;
     const t = setTimeout(post, 120);
     return () => clearTimeout(t);
   }, [message, post]);

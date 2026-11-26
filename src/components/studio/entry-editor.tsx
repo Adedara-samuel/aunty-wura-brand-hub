@@ -95,8 +95,7 @@ export function EntryEditor({
 
   React.useEffect(() => {
     setUnsaved(isDirty);
-    if (isDirty) setSaveState((s) => (s === "saving" ? s : "dirty"));
-  }, [isDirty, values]);
+  }, [isDirty]);
   React.useEffect(() => () => setUnsaved(false), []);
   React.useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -250,12 +249,13 @@ export function EntryEditor({
     return { folder: type, suggestions };
   }, [allEntries, def.groups, type]);
 
+  const displayState: SaveState = save.isPending ? "saving" : isDirty && saveState !== "error" ? "dirty" : saveState;
   const statusText =
-    saveState === "saving"
+    displayState === "saving"
       ? "Saving…"
-      : saveState === "dirty"
+      : displayState === "dirty"
         ? autosave && entryId ? "Unsaved changes · autosaving…" : "Unsaved changes"
-        : saveState === "error"
+        : displayState === "error"
           ? "Not saved — check the form"
           : lastSaved && entryId
             ? `Saved ${formatRelative(lastSaved)}`
@@ -270,8 +270,8 @@ export function EntryEditor({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 {publishable && <PublishBadge published={published} changed={!!changed} />}
-                <span className={cn("flex items-center gap-1.5 text-xs", saveState === "error" ? "text-destructive" : "text-muted-foreground")}>
-                  {saveState === "saving" ? <Loader2 className="size-3.5 animate-spin" /> : saveState === "saved" || (saveState === "idle" && entryId) ? <CheckCircle2 className="size-3.5 text-success" /> : saveState === "error" ? <AlertCircle className="size-3.5" /> : null}
+                <span className={cn("flex items-center gap-1.5 text-xs", displayState === "error" ? "text-destructive" : "text-muted-foreground")}>
+                  {displayState === "saving" ? <Loader2 className="size-3.5 animate-spin" /> : displayState === "saved" || (displayState === "idle" && entryId) ? <CheckCircle2 className="size-3.5 text-success" /> : displayState === "error" ? <AlertCircle className="size-3.5" /> : null}
                   {statusText}
                 </span>
               </div>
