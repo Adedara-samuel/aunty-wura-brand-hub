@@ -167,7 +167,7 @@ export function reportToMarkdown(r: ContentReport, title = "Website content"): s
     for (const s of m.sections) {
       if (m.sections.length > 1) out.push(`### ${s.label}`, "");
       if (s.kind === "collection" && s.entries.length === 0) {
-        out.push(`> ⚠️ **Missing:** no ${s.label.toLowerCase()} have been added yet.`, "");
+        out.push(`> ⚠️ **Missing:** nothing has been added to ${s.label} yet.`, "");
         continue;
       }
       for (const e of s.entries) {

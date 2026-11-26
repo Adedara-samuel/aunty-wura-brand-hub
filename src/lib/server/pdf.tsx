@@ -13,6 +13,7 @@ const SYMBOLS: Record<string, string> = { "₦": "NGN ", "₵": "GHS ", "→": "
 function t(input: unknown): string {
   return String(input ?? "")
     .replace(/[₦₵→✓⚠️]/g, (c) => SYMBOLS[c] ?? "")
+    .replace(/ +\)/g, ")")
     .replace(/[^\u0009\u000A\u000D -ÿ–—‘’“”•…€ŒœŠšŸŽžƒˆ˜†‡‰‹›™]/g, "");
 }
 
@@ -227,7 +228,7 @@ function ContentPackPdf({ report, title }: { report: ContentReport; title: strin
                 {m.sections.length > 1 && <Text style={[s.display, { fontSize: 16, marginBottom: 6 }]}>{t(sec.label)}</Text>}
                 {sec.kind === "collection" && sec.entries.length === 0 && (
                   <View style={{ backgroundColor: C.redBg, padding: 10, borderRadius: 6 }}>
-                    <Text style={{ color: C.red, fontFamily: "Helvetica-Bold" }}>Missing: no {t(sec.label.toLowerCase())} have been added yet.</Text>
+                    <Text style={{ color: C.red, fontFamily: "Helvetica-Bold" }}>Missing: nothing has been added to {t(sec.label)} yet.</Text>
                   </View>
                 )}
                 {sec.entries.map((e) => (

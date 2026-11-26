@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Every public page reads live content from MongoDB (and supports draft preview),
   // so the classic request-time rendering model is used instead of Cache Components.
-  serverExternalPackages: ["@react-pdf/renderer", "cloudinary", "mongodb", "bcryptjs"],
+  serverExternalPackages: ["@react-pdf/renderer", "mongodb", "bcryptjs"],
   images: {
     remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
   },
