@@ -5,7 +5,8 @@
       "PowerShell(Set-Location c:\\\\Users\\\\HomePC\\\\Documents\\\\work\\\\aunty-wura-brand-hub; npx tsc --noEmit -p . 2>&1 | Select-Object -First 50; \"exit: $LASTEXITCODE\")",
       "PowerShell(npx tsc --noEmit -p . 2>&1 | Select-Object -First 50; \"exit: $LASTEXITCODE\"; npx eslint src 2>&1 | Select-Object -Last 40)",
       "PowerShell(npx eslint src -f json 2>$null)",
-      "PowerShell(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const r=JSON.parse\\(s\\);for\\(const f of r\\)for\\(const m of f.messages\\)console.log\\(m.ruleId,'|',f.filePath.split\\('src'\\)[1]+':'+m.line,'|',m.message.split\\('\\\\n'\\)[0].slice\\(0,90\\)\\)}\\)\")"
+      "PowerShell(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const r=JSON.parse\\(s\\);for\\(const f of r\\)for\\(const m of f.messages\\)console.log\\(m.ruleId,'|',f.filePath.split\\('src'\\)[1]+':'+m.line,'|',m.message.split\\('\\\\n'\\)[0].slice\\(0,90\\)\\)}\\)\")",
+      "PowerShell(Set-Location c:\\\\Users\\\\HomePC\\\\Documents\\\\work\\\\aunty-wura-brand-hub; $p = \\(Get-NetTCPConnection -LocalPort 3100 -State Listen -ErrorAction SilentlyContinue\\).OwningProcess | Select-Object -First 1; if \\($p\\) { Stop-Process -Id $p -Force; \"stopped $p\" }; npx tsc --noEmit -p . 2>&1 | Select-Object -First 10; npx next build 2>&1 | Select-String -Pattern \"error|Error|Failed|Compiled\" | Select-Object -First 15)"
     ],
     "additionalDirectories": [
       "c:\\Users\\HomePC\\Documents\\work\\aunty-wura-brand-hub\\(workspace)\\[module]"

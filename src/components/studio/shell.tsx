@@ -25,7 +25,7 @@ function NavLink({ href, active, children, className }: { href: string; active: 
       }}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "group flex items-center gap-3 rounded-xl px-3 py-2 text-[0.88rem] font-medium transition",
+        "group flex items-center gap-3 rounded-xl px-3 py-1.5 text-[0.86rem] font-medium transition",
         active ? "bg-foreground text-background" : "text-foreground/75 hover:bg-foreground/5 hover:text-foreground",
         className,
       )}
@@ -49,7 +49,7 @@ function SidebarContent({ user }: { user: { name: string; email: string } }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="px-5 pt-6 pb-4">
+      <div className="px-5 pt-5 pb-3">
         <NextLink href="/content-studio" onClick={confirmLeave} className="block">
           <span className="eyebrow text-[0.62rem]!">Private workspace</span>
           <span className="mt-1 block font-display text-2xl">Content Studio</span>
@@ -67,7 +67,7 @@ function SidebarContent({ user }: { user: { name: string; email: string } }) {
         )}
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 pb-6" aria-label="Studio">
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-4" aria-label="Studio">
         <div className="space-y-0.5">
           <NavLink href="/content-studio" active={pathname === "/content-studio"}>
             <Gauge className="size-4" /> Overview

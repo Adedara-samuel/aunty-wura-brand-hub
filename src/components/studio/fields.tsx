@@ -69,7 +69,7 @@ function FieldShell({
   counter?: React.ReactNode;
 }) {
   return (
-    <div id={`field-${id}`} className={cn("scroll-mt-28", field.width === "half" ? "md:col-span-1" : "md:col-span-2")}>
+    <div id={`field-${id}`} className={cn("scroll-mt-28", field.width === "half" ? "@xl:col-span-1" : "@xl:col-span-2")}>
       <div className="flex items-start justify-between gap-3">
         <label htmlFor={id} className={cn("font-semibold text-foreground", compact ? "text-[0.8rem]" : "text-[0.95rem]")}>
           {compact ? field.label : field.heading ?? field.label}
@@ -382,7 +382,7 @@ export function FieldRenderer({ field, name, compact }: { field: FieldDef; name:
       );
     case "toggle":
       return (
-        <div id={`field-${id}`} className={cn("md:col-span-2", compact && "md:col-span-1")}>
+        <div id={`field-${id}`} className={cn("@xl:col-span-2", compact && "@xl:col-span-1")}>
           <label htmlFor={id} className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border bg-surface/60 p-4">
             <span>
               <span className="block text-[0.95rem] font-semibold">{field.heading ?? field.label}</span>
@@ -441,7 +441,7 @@ function RepeaterInput({ field, name, value, onChange }: { field: FieldDef; name
               <button type="button" onClick={() => onChange(value.filter((_, k) => k !== i))} className="cursor-pointer rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive" aria-label={`Remove ${field.itemLabel ?? "item"}`}><Trash2 className="size-3.5" /></button>
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 @xl:grid-cols-2">
             {sub.map((s) => (
               <FieldRenderer key={s.key} field={s} name={`${name}.${i}.${s.key}`} compact />
             ))}
@@ -449,7 +449,7 @@ function RepeaterInput({ field, name, value, onChange }: { field: FieldDef; name
         </div>
       ))}
       <Button type="button" variant="outline" size="sm" onClick={() => onChange([...value, blank()])}>
-        <Plus /> Add {value.length ? "another" : "a"} {field.itemLabel ?? "item"}
+        <Plus /> Add {value.length ? "another" : /^[aeiou]/i.test(field.itemLabel ?? "item") ? "an" : "a"} {field.itemLabel ?? "item"}
       </Button>
     </div>
   );

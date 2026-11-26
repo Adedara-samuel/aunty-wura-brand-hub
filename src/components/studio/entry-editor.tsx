@@ -275,7 +275,7 @@ export function EntryEditor({
                   {statusText}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="hidden rounded-full bg-muted p-0.5 sm:flex" role="tablist" aria-label="View mode">
                   {(
                     [
@@ -330,7 +330,7 @@ export function EntryEditor({
 
           <div className={cn("grid gap-8", effectiveMode === "split" && "xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]")}>
             {effectiveMode !== "preview" && (
-              <form onSubmit={(e) => { e.preventDefault(); void doSave(); }} noValidate className="min-w-0 space-y-6">
+              <form onSubmit={(e) => { e.preventDefault(); void doSave(); }} noValidate className="@container min-w-0 space-y-6">
                 {/* Checklist */}
                 <Card className={cn("p-4 md:p-5", !publishable && "hidden", missing.length ? "border-warning/30 bg-warning/[0.04]" : "border-success/30 bg-success/[0.05]")}>
                   {missing.length ? (
@@ -358,7 +358,7 @@ export function EntryEditor({
                   <Card key={g.title} className="p-5 md:p-7">
                     <h3 className="font-display text-2xl">{g.title}</h3>
                     {g.description && <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{g.description}</p>}
-                    <div className="mt-6 grid gap-x-5 gap-y-8 md:grid-cols-2">
+                    <div className="mt-6 grid gap-x-5 gap-y-8 @xl:grid-cols-2">
                       {g.fields.map((f) => (
                         <FieldRenderer key={f.key} field={f} name={f.key} />
                       ))}
